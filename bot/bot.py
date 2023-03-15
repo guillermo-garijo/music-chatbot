@@ -14,14 +14,26 @@ def askQuestion(user):
     p_response=processResponse(user_response)
     user.setQuestionAnswer('genres', p_response)
 
-def generateResponse(user):
-    #hacer las reglas y generar la respuesta
+def generateResponse(filtered):
+    for word in filtered:
+        if word in ['recomendar','recomiendame','mejor','mejores','mas','popular','populares','cancion','canciones','escuchadas']:
+            continue
+        else:
+            break
+        print("La cancion mas popular del momento es Quedate de Quevedo")
+
+    for word in filtered:
+        if word in ['recomendar','recomiendame','peor','peores','menos','popular','populares','cancion','canciones','escuchadas']:
+            continue
+        else:
+            break
+        print("La cancion menos popular del momento es 'Al partir un beso y una flor'")
     return
 
 def processResponse(response):
     #añadir otros procesados si fuese necesario
-    tokens=nltk.word_tokenize(response)
-    stop_words=nltk.corpus.stopwords.words('english')
+    tokens= nltk.word_tokenize(response)
+    stop_words = nltk.corpus.stopwords.words('english')
     filtered = []
     for word in tokens:
         if word not in stop_words:
