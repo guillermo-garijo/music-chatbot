@@ -60,8 +60,9 @@ def start():
         
 
 def main():
-    printUI()
-    start()
+    print(ReadData.getByParameter(['artist', 'title']))
+    #printUI()
+    #start()
 
 
 if __name__ == "__main__":
