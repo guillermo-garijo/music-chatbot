@@ -1,17 +1,21 @@
 import csv
+import os
+import pandas
 
-file='data.csv'
+# Define the relative path to the file
+relative_path = os.path.join('../data', 'data.csv')
 
+# Construct the absolute path to the file
+absolute_path = os.path.abspath(relative_path)
 
 #retorna toda la info del parametro pasado en un array
 def getByParameter(parameter):
     result=[]
-    with open(file, newline='') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            tmp=[]
-            for p in parameter:
-                tmp.append(row[p])
-            result.append(tmp)
-    f.close()
+    with open(absolute_path, 'r', encoding='utf-8') as f:
+        reader = pandas.read_csv(f)
+        print(reader)
+        for p in parameter:
+            result.append(reader.loc[: , p])
+        f.close()
+        print(result)
     return result
