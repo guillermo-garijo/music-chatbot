@@ -13,9 +13,7 @@ def getByParameter(parameter):
     result=[]
     with open(absolute_path, 'r', encoding='utf-8') as f:
         reader = pandas.read_csv(f)
-        print(reader)
         for p in parameter:
             result.append(reader.loc[: , p])
         f.close()
-        print(result)
     return result
