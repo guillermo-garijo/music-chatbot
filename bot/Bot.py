@@ -14,7 +14,7 @@ def print_hi(name):
 
 
 greetings = ['Hello!', 'Whatz up?', 'Nice to meet you!', 'You look handsome!']
-youWelcome = ['You Welcome! How are you today?', 'My pleasure! Do you need something? You can ask about artists, genres, top songs...','Happy to be of service. What do you want? :)', 'It was nothing. Ask me what you need :)']
+youWelcome = ['You Welcome!', 'My pleasure! Do you need something? You can ask about artists, genres, top songs...','Happy to be of service. What do you want? :)', 'It was nothing. Ask me what you need :)']
 answerHowAreYou = ["I'm fine thanks! Do you need something?","I'm listening to music right now, but i'm here to help you, How can I help?"]
 genres = ['Hardcore', 'Techno', 'Rock']
 artists = ['Nerve Agent', 'Arctic Monkeys', 'Sefa']
@@ -52,8 +52,11 @@ inputKeys = ["hello",
              "show top music",
              "tell me top songs",
              "tell me top music",
+             "can you tell me top songs",
+             "can you tell me top music",
+             "top songs",
 
-             "can you repeat"
+             "can you repeat",
              "repeat please",
              "repeat",
              "again",
@@ -175,7 +178,7 @@ def generateResponse(s, user, lastKey):
 
     ## USER ASKING FOR TOP FAVOURITE GENRES/ARTISTS/SONGS
 
-    if (questionKey == "show top songs" or questionKey == "show top music" or questionKey == "tell me top songs" or questionKey == "tell me top music"):
+    if (questionKey == "show top songs" or questionKey == "show top music" or questionKey == "tell me top songs" or questionKey == "tell me top music" or questionKey == "can you tell me top songs" or questionKey == "can you tell me top music" or questionKey == 'top songs'):
 
         askedGenre= getGenre(s) ##Check if asking for genre
         askedArtist = getArtist(s) ##Check if asking for artist
