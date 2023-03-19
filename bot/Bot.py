@@ -66,8 +66,13 @@ inputKeys = ["hello",
              "life about"]
 
 def printUI():
-    print('\033[95m',"Hello I'm music-chatbot! Ask me anything you want about music.", '\033[0m')
-    print('\033[95m',"To end the conversation type: 'exit'", '\033[0m')
+    r= "\033[95m Hello I'm music-chatbot! Ask me anything you want about music. \n           To end the conversation type: 'exit' \033[0m"
+    print('\033[95mMelody > ', end='')
+    for char in r:
+        sleep(0.03)
+        sys.stdout.write(char)
+        sys.stdout.flush()
+    print("\033[0m", end='')
 
 def start():
     user = User.User()
