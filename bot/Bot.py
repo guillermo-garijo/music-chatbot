@@ -60,7 +60,10 @@ inputKeys = ["hello",
              "repeat please",
              "repeat",
              "again",
-             "give another one"]
+             "give another one",
+
+             "show information",
+             "life about"]
 
 def printUI():
     print('\033[95m',"Hello I'm music-chatbot! Ask me anything you want about music.", '\033[0m')
@@ -195,6 +198,19 @@ def generateResponse(s, user, lastKey):
         else:
             return getXTopSongs(askedNumber)
 
+    if (questionKey == "life about" or questionKey == "show information"):
+        askedArtist = getArtist(s)
+        if askedArtist:
+            r = "Sure, here you have some information about " + askedArtist + "\n\n \033[94m"
+            r += ReadData.buscar_definicion_wp(askedArtist)
+            r += "\033[0m\033[95m\n\n           Ask for more information if you need it :)\033[0m"
+
+            if (len(r) > 180):
+                return r
+            else:
+                return "Sorry, I' dont have enough information about " + askedArtist
+        else:
+            return "Sorry, I can't find the artist"
     if (questionKey == "can you repeat" or questionKey == "repeat please" or questionKey =="repeat" or questionKey =="again" or questionKey =="give another one"):
         if(lastKey =="i'm fine" or lastKey =="i'm good" or lastKey == "i'm happy" or lastKey == 'i feel good today'):
             return getRandomHappySong()
@@ -331,6 +347,8 @@ def getGenre(input):
     return False
 
 
+
+
 """"
 ################################################################
 getArtist: Receive an input and returns the artist that is there.
@@ -338,6 +356,9 @@ getArtist: Receive an input and returns the artist that is there.
 """
 def getArtist(input):
     all_artists = ReadData.getAllArtists()
+    ##print("LONGITUD: " ,len(all_artists))
+    ##print("Artistas: " ,all_artists)
+
     for artist in all_artists:
         similarityRatio = fuzz.token_set_ratio(input, artist)
         #print(artist,"-",similarityRatio)
