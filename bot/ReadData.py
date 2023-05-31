@@ -1,8 +1,13 @@
 import csv
 import os
+
+#import BeautifulSoup4
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+import spotipy
+import json
+import webbrowser
+#from bs4 import BeautifulSoup
 from time import sleep
 import re
 import textwrap
@@ -62,7 +67,28 @@ relative_path = os.path.join('../data', 'data.csv')
 # Construct the absolute path to the file
 absolute_path = os.path.abspath(relative_path)
 
-#retorna toda la info del parametro pasado en un array
+def displaySong(song):
+    clientID = 'your_client_id'
+    clientSecret = 'your_client_secret'
+    redirectURI = 'http://google.com/'
+
+    oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirectURI)
+
+    token_dict = oauth_object.get_access_token()
+    token = token_dict['access_token']
+
+
+    spotifyObject = spotipy.Spotify(auth=token)
+    user = spotifyObject.current_user()
+    json.dumps(user, sort_keys=True, indent=4)
+    searchResults = spotifyObject.search(song, 1, 0, "track")
+    tracks_dict = searchResults['tracks']
+    tracks_items = tracks_dict['items']
+    song = tracks_items[0]['external_urls']['spotify']
+    webbrowser.open(song)
+
+
+
 def getByParameter(parameter):
     result=[]
     with open(absolute_path, 'r', encoding='utf-8') as f:
@@ -97,7 +123,7 @@ def buscar_definicion_wp(artist):
     ##Get response of url
     response = requests.get(url)
     #Beautify url
-    soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup4(response.content, 'html.parser')
     ##String Manipulation for getting the important information.
     texto_principal_element = soup.find('div', {'id': 'mw-content-text'})
     texto_principal = texto_principal_element.find(class_='mw-parser-output')

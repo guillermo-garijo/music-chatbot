@@ -7,6 +7,9 @@ name = "pypi"
 nltk = "*"
 pandas = "*"
 fuzzywuzzy = "*"
+requests = "*"
+beautifulsoup4 = "*"
+spotipy = "*"
 
 [dev-packages]
 
