@@ -2,6 +2,9 @@ import nltk
 import random
 import User
 import ReadData
+import spotipy
+import json
+import webbrowser
 import Utils
 import pandas as pd
 import sys
@@ -75,6 +78,7 @@ def printUI():
     print("\033[0m", end='')
 
 def start():
+    #ReadData.displaySong("Flowers") #--> TEST OK
     user = User.User()
     last_key = 'Hello'
     run = True
@@ -129,12 +133,21 @@ def generateResponse(s, user, lastKey):
         lastKey = lastKey
         return getRandomSadSong()
 
+    #if(questionKey =="listen" or questionKey == "hear" or questionKey == "listen to the song" or):
+    #    lastKey = lastKey
+    #    return
+
+
     ## USER ASKING FOR BOT FAVOURITE GENRES/ARTISTS/SONGS
     if (questionKey == "what are your favourite" or questionKey == "which you like most" or questionKey == "your best" or questionKey == "can you tell your"):
         ##CHECK IF ASKING FOR GENRE
         askGenres = fuzz.partial_ratio(s, 'genre') > 75  ##check if 'genre' in input
         askArtists = fuzz.partial_ratio(s, 'artist') > 75  ##check if 'genre' in input
         askSongs = fuzz.partial_ratio(s, 'song') > 75  ##check if 'genre' in input
+        #askPlaylist = fuzz.partial_ratio(s, 'playlist') > 75  ##check if 'playlist' in input
+
+        #if askPlaylist:
+        #    print("test")
 
         if askGenres:
             number = getNumber(s) #Get number of genres asking
@@ -182,6 +195,7 @@ def generateResponse(s, user, lastKey):
                 r = "I only have " + str(len(songs)) + " favourite songs:"
                 for i in range(len(songs)):
                     r += '\n              ' + str(i+1) + '.\033[92m' + songs[i] + '\033[0m'
+                    ReadData.displaySong(songs[i])
             return r
 
     ## USER ASKING FOR TOP FAVOURITE GENRES/ARTISTS/SONGS
