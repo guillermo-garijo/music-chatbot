@@ -100,9 +100,9 @@ def start():
 
 def main():
     #print(ReadData.getByParameter(['artist', 'title']))
-    printUI()
-    start()
-
+    #printUI()
+    #start()
+    get_event_information()
 
 
 
