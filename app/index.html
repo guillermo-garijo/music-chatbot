@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #292929;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://img.freepik.com/free-vector/musical-notes-pattern-black-background_1017-32303.jpg?t=st=1685788018~exp=1685788618~hmac=6ad7c57e4f3237ac6a290516ded1e81ee3bffa4261c7c241738c9ea9735dfc70');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .conversation {
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #333333;
+            border: 1px solid #555555;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            white-space: pre-line;
+        }
+
+        .message .profile-icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #555555;
+            color: #ffffff;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-message .profile-icon {
+            background-color: #4CAF50;
+        }
+
+        .chatbot-message .profile-icon {
+            background-color: #1E90FF;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #555555;
+            border-radius: 5px;
+            background-color: #333333;
+            color: #fff;
+        }
+
+        input[type="submit"] {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .playlist {
+            padding: 10px;
+            background-color: #333333;
+            border: 1px solid #555555;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+                .song {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .song .profile-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            background-color: #1E90FF;
+            color: #ffffff;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .song .song-title {
+            font-weight: bold;
+        }
+
+        .song-container {
+            padding: 10px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('chat-form');
+            var conversationDiv = document.getElementById('conversation');
+            var userInput = document.getElementById('user-input');
+            var playlistDiv = document.getElementById('playlist');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var message = userInput.value;
+
+                var messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add('user-message');
+                messageDiv.innerHTML = '<span class="profile-icon"><i class="fas fa-user"></i></span> <strong>Tú:</strong> ' + message;
+                conversationDiv.appendChild(messageDiv);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/chat', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = xhr.responseText;
+
+                        updatePlaylist();
+
+                        var responseDiv = document.createElement('div');
+                        responseDiv.classList.add('message');
+                        responseDiv.classList.add('chatbot-message');
+                        responseDiv.innerHTML = '<span class="profile-icon"><i class="fas fa-music"></i></span> <strong>Melody:</strong> ' + response.replace(/\n/g, '<br>');
+                        conversationDiv.appendChild(responseDiv);
+
+                        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+                    }
+                };
+                xhr.send('user_input=' + encodeURIComponent(message));
+
+                userInput.value = '';
+            });
+
+            function updatePlaylist() {
+                var playlistDiv = document.getElementById('playlist');
+
+                // Realizar solicitud al servidor para obtener la variable playlist
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/playlist', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var playlist = JSON.parse(xhr.responseText);
+
+                        playlistDiv.innerHTML = '';
+
+                        if (playlist.length === 0) {
+                            playlistDiv.textContent = 'Dile a Melody que añada una canción';
+                        } else {
+                            var playlistTitle = document.createElement('h2');
+                            playlistTitle.textContent = 'Playlist';
+                            playlistDiv.appendChild(playlistTitle);
+
+                            var playlistContainer = document.createElement('div');
+                            playlistContainer.classList.add('song-container');
+                            playlistDiv.appendChild(playlistContainer);
+
+                            for (var i = 0; i < playlist.length; i++) {
+                                var songDiv = document.createElement('div');
+                                songDiv.classList.add('song');
+
+                                var songIcon = document.createElement('span');
+                                songIcon.classList.add('profile-icon');
+                                songIcon.innerHTML = '<i class="fas fa-music"></i>';
+
+                                var songTitle = document.createElement('span');
+                                songTitle.classList.add('song-title');
+                                songTitle.textContent = playlist[i];
+
+                                songDiv.appendChild(songIcon);
+                                songDiv.appendChild(songTitle);
+                                playlistContainer.appendChild(songDiv);
+                            }
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            updatePlaylist();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot</h1>
+        <div class="row">
+            <div class="column">
+                <div id="playlist" class="playlist"></div>
+            </div>
+            <div class="column">
+                <div id="conversation" class="conversation"></div>
+                <form id="chat-form">
+                    <input type="text" id="user-input" placeholder="Escribe tu mensaje" required>
+                    <input type="submit" value="Enviar">
+</form>
+</div>
+</div>
+</div>
+
+</body>
+</html>
